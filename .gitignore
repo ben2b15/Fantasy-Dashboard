@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.local
+config/leagues.json
+backend/src/playwright/storageState/
+*.log
+*.tsbuildinfo
+shared/types.js

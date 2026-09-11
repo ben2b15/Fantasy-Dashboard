@@ -1,0 +1,9 @@
+[
+  { "platform": "sleeper", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "Sleeper League A" },
+  { "platform": "sleeper", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "Sleeper League B" },
+  { "platform": "yahoo", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "Yahoo League A" },
+  { "platform": "yahoo", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "Yahoo League B" },
+  { "platform": "espn", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "ESPN League" },
+  { "platform": "cbs", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "CBS League" },
+  { "platform": "ffpc", "leagueId": "REPLACE_ME", "myTeamId": "REPLACE_ME", "displayName": "FFPC League" }
+]
