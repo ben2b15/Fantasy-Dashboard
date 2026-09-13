@@ -13,8 +13,10 @@ const CACHE_TTL_MS = 8 * 60 * 1000; // 8 minutes — short enough to feel fresh,
 // One slow/broken platform must never stall the rest. Playwright-based platforms
 // (CBS, FFPC) can have multiple leagues scraped sequentially in real page loads,
 // so this needs enough headroom for that — an occasional slow first load is an
-// acceptable tradeoff given the 8-minute cache above.
-const ADAPTER_TIMEOUT_MS = 45 * 1000;
+// acceptable tradeoff given the 8-minute cache above. On a constrained host
+// (e.g. Render's free tier, ~0.1 CPU) real Chromium page loads are noticeably
+// slower than on a dev machine, so this needs real headroom.
+const ADAPTER_TIMEOUT_MS = 120 * 1000;
 const scoreboardCache = new TtlCache<ScoreboardResponse>(CACHE_TTL_MS);
 
 const adapters: PlatformAdapter[] = [sleeperAdapter, yahooAdapter, espnAdapter, cbsAdapter, ffpcAdapter];

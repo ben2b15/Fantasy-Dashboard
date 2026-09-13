@@ -15,8 +15,24 @@ function getBrowser(): Promise<Browser> {
   return browserPromise;
 }
 
-function storageStatePath(site: 'cbs' | 'ffpc'): string {
+function localStorageStatePath(site: 'cbs' | 'ffpc'): string {
   return path.join(STORAGE_DIR, `${site}.json`);
+}
+
+// Render (and similar hosts) can't mount a "Secret File" at a nested path like
+// backend/src/playwright/storageState/cbs.json — every secret file lands flat
+// at /etc/secrets/<name> regardless of the name given. Use that as the initial
+// source when no local copy exists yet (e.g. right after a fresh deploy).
+function secretFileStorageStatePath(site: 'cbs' | 'ffpc'): string {
+  return `/etc/secrets/${site}.json`;
+}
+
+function resolveInitialStorageState(site: 'cbs' | 'ffpc'): string | undefined {
+  const local = localStorageStatePath(site);
+  if (existsSync(local)) return local;
+  const secret = secretFileStorageStatePath(site);
+  if (existsSync(secret)) return secret;
+  return undefined;
 }
 
 /**
@@ -34,10 +50,10 @@ export async function getAuthenticatedContext(
   landingUrl: string
 ): Promise<BrowserContext> {
   const browser = await getBrowser();
-  const statePath = storageStatePath(site);
-  const hasState = existsSync(statePath);
+  const initialState = resolveInitialStorageState(site);
+  const localPath = localStorageStatePath(site);
 
-  const context = await browser.newContext(hasState ? { storageState: statePath } : {});
+  const context = await browser.newContext(initialState ? { storageState: initialState } : {});
   const page = await context.newPage();
 
   await page.goto(landingUrl, { waitUntil: 'domcontentloaded' });
@@ -51,7 +67,7 @@ export async function getAuthenticatedContext(
     }
   }
 
-  await context.storageState({ path: statePath });
+  await context.storageState({ path: localPath });
   await page.close();
   return context;
 }
